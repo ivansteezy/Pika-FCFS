@@ -13,6 +13,8 @@ namespace FCFS
 {
     static class Move
     {
+        //TODO: migrate this method to the horse class
+        //this code should be executed por back end threads
         public static void MoveTo(this Image target, double newX, double newY)
         {
             
@@ -24,15 +26,6 @@ namespace FCFS
             DoubleAnimation anim2 = new DoubleAnimation(left, newX - left, TimeSpan.FromSeconds(3));
             trans.BeginAnimation(TranslateTransform.XProperty, anim1);
             trans.BeginAnimation(TranslateTransform.YProperty, anim2);
-        }
-
-        public static void SMoveTo(Image target)
-        {
-            for (var i = 0; i < 600; i++)
-            {
-                Canvas.SetLeft(target, i);
-                // Thread.Sleep(20);
-            }
         }
     }
 
@@ -51,22 +44,24 @@ namespace FCFS
             //Move.MoveTo(pika4, 10, 600);
             //Move.MoveTo(pika5, 10, 600);
 
-            //Move.SMoveTo(pika1);
-            //Move.SMoveTo(pika2);
-            //Move.SMoveTo(pika3);
-            //Move.SMoveTo(pika4);
-            //Move.SMoveTo(pika5);
+            var list = new List<Horse>();
+            var h1 = new Horse(1, new Thread(Horse.Run), "Juan", 1000, pika1);
+            list.Add(h1);
 
+            var h2 = new Horse(2, new Thread(Horse.Run), "Pepe", 5000, pika2);
+            list.Add(h2);
 
-            //this.Dispatcher.Invoke(() =>
-            //{
-                var h1 = new Horse(1, new Thread(Horse.Run), "Juan", 1000, pika1);
-                var list = new List<Horse>();
-                list.Add(h1);
+            //var h3 = new Horse(2, new Thread(Horse.Run), "Pepe", 1000, pika3);
+            //list.Add(h3);
 
-                var race = new Race(list);
-                race.BeginRace();
-            //});
+            //var h4 = new Horse(2, new Thread(Horse.Run), "Pepe", 1000, pika4);
+            //list.Add(h4);
+
+            //var h5 = new Horse(2, new Thread(Horse.Run), "Pepe", 1000, pika5);
+            //list.Add(h5);
+
+            var race = new Race(list);
+            race.BeginRace();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace FCFS.src
@@ -26,7 +28,15 @@ namespace FCFS.src
 
         private void UpdatePos(double pos)
         {
-            Canvas.SetLeft(this.sprite, pos);
+            // animation code
+            var top = Canvas.GetTop(this.sprite);
+            var left = Canvas.GetLeft(this.sprite);
+            TranslateTransform trans = new TranslateTransform();
+            this.sprite.RenderTransform = trans;
+            DoubleAnimation anim1 = new DoubleAnimation(top, 600 - top, TimeSpan.FromSeconds(this.speed/1000));
+            DoubleAnimation anim2 = new DoubleAnimation(left, 600 - left, TimeSpan.FromSeconds(3));
+            trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+            trans.BeginAnimation(TranslateTransform.YProperty, anim2);
         }
 
         public static void Run(object horse)
