@@ -1,5 +1,10 @@
-﻿using System;
+﻿using FCFS.src;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -26,7 +31,7 @@ namespace FCFS
             for (var i = 0; i < 600; i++)
             {
                 Canvas.SetLeft(target, i);
-                Thread.Sleep(20);
+                // Thread.Sleep(20);
             }
         }
     }
@@ -46,11 +51,22 @@ namespace FCFS
             //Move.MoveTo(pika4, 10, 600);
             //Move.MoveTo(pika5, 10, 600);
 
-            Move.SMoveTo(pika1);
-            Move.SMoveTo(pika2);
-            Move.SMoveTo(pika3);
-            Move.SMoveTo(pika4);
-            Move.SMoveTo(pika5);
+            //Move.SMoveTo(pika1);
+            //Move.SMoveTo(pika2);
+            //Move.SMoveTo(pika3);
+            //Move.SMoveTo(pika4);
+            //Move.SMoveTo(pika5);
+
+
+            //this.Dispatcher.Invoke(() =>
+            //{
+                var h1 = new Horse(1, new Thread(Horse.Run), "Juan", 1000, pika1);
+                var list = new List<Horse>();
+                list.Add(h1);
+
+                var race = new Race(list);
+                race.BeginRace();
+            //});
         }
     }
 }
