@@ -41,6 +41,8 @@ namespace FCFS.src
             }
         }
 
+
+
         public Queue<Horse> ItemQueue { get { return m_ItemQueue; } set { m_ItemQueue = value; } }
         public List<Horse> ItemList   { get { return m_ItemList; }  set { m_ItemList  = value; } }
     }

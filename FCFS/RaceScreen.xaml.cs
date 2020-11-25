@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 
 namespace FCFS
 {
@@ -34,34 +35,72 @@ namespace FCFS
         public RaceScreen()
         {
             InitializeComponent();
+
+            Uri myUri = new Uri(@"..\..\img\pika.gif", UriKind.RelativeOrAbsolute);
+            GifBitmapDecoder decoder2 = new GifBitmapDecoder(myUri, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            BitmapSource bitmapSource2;
+            int frameCount = decoder2.Frames.Count;
+
+            try
+            {
+                Thread th = new Thread(() => {
+                    while (true)
+                    {
+                        for (int i = 0; i < frameCount; i++)
+                        {
+                            this.Dispatcher.Invoke(new Action(delegate ()
+                            {
+                                bitmapSource2 = decoder2.Frames[i];
+                                pika1.Source = bitmapSource2;
+                                pika2.Source = bitmapSource2;
+                                pika3.Source = bitmapSource2;
+                                pika4.Source = bitmapSource2;
+                                pika5.Source = bitmapSource2;
+                            }));
+                            System.Threading.Thread.Sleep(100);
+                        }
+                    }
+                });
+                th.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception thown in gif thread ERROR: ", ex.Message);
+            }
         }
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            //Move.MoveTo(pika1, 10, 600);
-            //Move.MoveTo(pika2, 10, 600);
-            //Move.MoveTo(pika3, 10, 600);
-            //Move.MoveTo(pika4, 10, 600);
-            //Move.MoveTo(pika5, 10, 600);
+            var rnd = GenerateRandomNumbers();
 
             var list = new List<Horse>();
-            var h1 = new Horse(1, new Thread(Horse.Run), "Juan", 1000, pika1);
+            var h1 = new Horse(1, new Thread(Horse.Run), "Pika1", rnd[0], pika1);
             list.Add(h1);
 
-            var h2 = new Horse(2, new Thread(Horse.Run), "Pepe", 5000, pika2);
+            var h2 = new Horse(2, new Thread(Horse.Run), "Pika2", rnd[1], pika2);
             list.Add(h2);
 
-            //var h3 = new Horse(2, new Thread(Horse.Run), "Pepe", 1000, pika3);
-            //list.Add(h3);
+            var h3 = new Horse(3, new Thread(Horse.Run), "Pika3", rnd[2], pika3);
+            list.Add(h3);
 
-            //var h4 = new Horse(2, new Thread(Horse.Run), "Pepe", 1000, pika4);
-            //list.Add(h4);
+            var h4 = new Horse(4, new Thread(Horse.Run), "Pika4", rnd[3], pika4);
+            list.Add(h4);
 
-            //var h5 = new Horse(2, new Thread(Horse.Run), "Pepe", 1000, pika5);
-            //list.Add(h5);
+            var h5 = new Horse(1, new Thread(Horse.Run), "Pika5", rnd[4], pika5);
+            list.Add(h5);
 
             var race = new Race(list);
             race.BeginRace();
+        }
+
+        private List<uint> GenerateRandomNumbers()
+        {
+            Random rand = new Random();
+            var ints = Enumerable.Range(1, 10)
+                                         .Select(i => new Tuple<uint, uint>((uint)rand.Next(10), (uint)i))
+                                         .OrderBy(i => i.Item1)
+                                         .Select(i => (i.Item2 * 1000)).ToList();
+            return ints;
         }
     }
 }
